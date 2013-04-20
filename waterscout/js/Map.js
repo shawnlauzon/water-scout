@@ -1,4 +1,5 @@
 // create a map in the "map" div, set the view to a given place and zoom
+var map = L.map('map').setView([51.505, -0.09], 13);
 var endpoint = 'http://data.mwater.co/waterscout/apiv2/sources';
 
 var map = L.map('map');
@@ -10,13 +11,13 @@ map.addLayer(new L.Google("SATELLITE"));
 
 
 // current location
-map.locate({setView: true, maxZoom: 16});
+map.locate({setView: true, maxZoom: 15});
 
 function onLocationFound(e) {
 	var radius = e.accuracy / 2;
 
 	L.marker(e.latlng).addTo(map)
-		.bindPopup("You are within " + radius + " meters from this point").openPopup();
+		.bindPopup("My water is gone. I am sad. Help me find water before I die.").openPopup();
 
 	L.circle(e.latlng, radius).addTo(map);
 }
