@@ -2,3 +2,5 @@
 /releases/*
 
 /mongoose-3.7.exe
+
+.DS_Store
