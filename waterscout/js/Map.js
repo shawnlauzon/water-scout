@@ -2,10 +2,13 @@
 var map = L.map('map').setView([51.505, -0.09], 2);
 var endpoint = 'http://data.mwater.co/waterscout/apiv2/sources';
 
+var map = L.map('map');
+map.addLayer(new L.Google("SATELLITE"));
+
 // add an OpenStreetMap tile layer
 //L.tileLayer('http://tile.osmosnimki.ru/basesat/{z}/{x}/{y}.jpg', {}).addTo(map);
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
-//map.addLayer(new L.Google());
+//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
+
 
 // current location
 map.locate({setView: true, maxZoom: 15});
@@ -38,8 +41,10 @@ $.ajax({ url: endpoint}).done(function( data ) {
   	{
 
   		var loc = new L.LatLng(obj.latitude, obj.longitude);
-  		L.marker( loc ).addTo(map);
+      var marker = L.marker( loc ).addTo(map);
 
+      if(obj.desc != '')
+        marker.bindPopup( '<p>'+obj.desc+'</p>' );
   	}
 
   }
