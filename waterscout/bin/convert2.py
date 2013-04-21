@@ -1,7 +1,9 @@
 import codecs, json
 
 infile = "data/tzauds00g.asc"
-outfile= "data/geoJSON.json"
+outfile= "data/tzgeoJSON.json"
+#infile = "data/rwauds00g.asc"
+#outfile= "data/rwgeoJSON.json"
 
 geojson = {}
 features = []
@@ -25,7 +27,7 @@ for line in content[6:]:
     lastYllCorner = yllcorner + (cellsize * idy)
 
     for val in line.strip().split(" "):
-        if not val == "" and not (abs(float(val) - float(lastval)) < 1):
+        if not val == "" and not (abs(float(val) - float(lastval)) < 0.25):
             maxValue = max(float(maxValue), float(val))
             feature = {}
             geometry = {}
