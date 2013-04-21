@@ -12,18 +12,19 @@ curFile.close()
 
 cellsize = float(content[4].split(" ")[-1])
 xllcorner = float(content[2].split(" ")[-1])
-yllcorner = float(content[3].split(" ")[-1]) + (900 * cellsize)
+yllcorner = float(content[3].split(" ")[-1]) # + (900 * cellsize)
 nodata = content[5].split(" ")[-1]
 
 idy = 0;
 
-for line in content[906:]:
+for line in content[6:]:
     idx = 0;
-    lastval = nodata;
+    lastval = -9999;
     lastXllCorner = xllcorner
-    lastYllCorner = yllcorner + (cellsize * (idy + 1))
+    lastYllCorner = yllcorner + (cellsize * idy)
 
     for val in line.strip().split(" "):
+        #print((abs(float(val) - float(lastval))));
         if not val == "" and not (abs(float(val) - float(lastval)) < 1):
 #        if not val == nodata and not val == "" and not (abs(float(val) - float(lastval)) < 1) and not idx == 0:
             feature = {}
@@ -34,12 +35,12 @@ for line in content[906:]:
             geometry["type"] = "LineString"
             feature["type"] = "Feature"
             feature["geometry"] = geometry
-            feature["properties"] = {"value": val}
+            feature["properties"] = {"value": float(lastval)}
             features.append(feature)
             lastXllCorner = xllcorner + (cellsize * idx)
             lastYllCorner = yllcorner + (cellsize * idy)
-            print(geometry["coordinates"])
-        lastval = val
+            #print(geometry["coordinates"])
+            lastval = val
         idx += 1
     idy += 1
 
