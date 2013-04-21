@@ -9,9 +9,13 @@ var northEast = new L.LatLng(center.lat + range, -0.9);
 var map = L.map('map').setView(center, 6);
 map.addLayer(new L.Google("SATELLITE"));
 
+var firstLatlng = null;
+var secondLatlng = null;
+var distance = null;
+var clickMessage;
 
 $.getJSON("data/rwgeoJSON.json", function(data) {
-	var colorScale = chroma.scale(['#ccffff', '#003366']).domain([1, 5820], 500, "log")
+	var colorScale = chroma.scale(['white', 'red']).domain([1, 5820], 500, "log")
     // data is a JavaScript object now. Handle it as such
 	L.geoJson(data, {
 		style: function(feature) {
@@ -23,11 +27,28 @@ $.getJSON("data/rwgeoJSON.json", function(data) {
 		filter: function(feature, layer) {
 			return feature.properties.value >= 1;
 		}
+	}).on('click', function(e) { 
+		if (firstLatlng === null) {
+			firstLatlng = e.latlng;
+			L.popup().setLatLng(e.latlng).setContent("Start building pipe").openOn(map);
+			console.log(e);
+			//this.bindPopup(clickMessage);
+		} else {
+			secondLatlng = e.latlng;
+			distance = firstLatlng.distanceTo(secondLatlng);
+			L.popup().setLatLng(secondLatlng).setContent("You built a pipe of " + (distance / 1000).toFixed(2) + " km").openOn(map);
+			var polyline = L.polyline([firstLatlng, secondLatlng], {color: 'black'}).addTo(map);
+			console.log(distance);
+			firstLatlng = null;
+		}
+	})
+	.on('close', function(e) {
+		firstLatlng = null;
 	}).addTo(map);
 });
 
 $.getJSON("data/tzgeoJSON.json", function(data) {
-	var colorScale = chroma.scale(['#ccffff', '#003366']).domain([1, 7000], 500, "log")
+	var colorScale = chroma.scale(['white', 'red']).domain([1, 7000], 500, "log")
     // data is a JavaScript object now. Handle it as such
 	L.geoJson(data, {
 		style: function(feature) {
@@ -39,6 +60,23 @@ $.getJSON("data/tzgeoJSON.json", function(data) {
 		filter: function(feature, layer) {
 			return feature.properties.value >= 1;
 		}
+	}).on('click', function(e) { 
+		if (firstLatlng === null) {
+			firstLatlng = e.latlng;
+			L.popup().setLatLng(e.latlng).setContent("Start building pipe").openOn(map);
+			console.log(e);
+			//this.bindPopup(clickMessage);
+		} else {
+			secondLatlng = e.latlng;
+			distance = firstLatlng.distanceTo(secondLatlng);
+			L.popup().setLatLng(secondLatlng).setContent("You built a pipe of " + (distance / 1000).toFixed(2) + " km").openOn(map);
+			var polyline = L.polyline([firstLatlng, secondLatlng], {color: 'black'}).addTo(map);
+			console.log(distance);
+			firstLatlng = null;
+		}
+	})
+	.on('close', function(e) {
+		firstLatlng = null;
 	}).addTo(map);
 	
 	// Do these last so that the get on top
@@ -52,12 +90,11 @@ $.getJSON("data/tzgeoJSON.json", function(data) {
 			if (obj.latitude != null || obj.longitude != null) {
 
 				var loc = new L.LatLng(obj.latitude, obj.longitude);
-				var marker = L.circle(loc, 500, { color: '#cc3300', zIndexOffset: 1000 }).addTo(map);
+				var marker = L.circle(loc, 500, { color: 'blue', zIndexOffset: 1000 }).addTo(map);
 
 				if (obj.name != '')
 					marker.bindPopup('<p>' + obj.name + '</p>');
 			}
 		}
 	});
-	
 });
