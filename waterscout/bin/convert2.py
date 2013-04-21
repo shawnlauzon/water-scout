@@ -21,7 +21,7 @@ for line in content[906:]:
     idx = 0;
     lastval = nodata;
     lastXllCorner = xllcorner
-    lastYllCorner = yllcorner
+    lastYllCorner = yllcorner + (cellsize * (idy + 1))
 
     for val in line.strip().split(" "):
         if not val == "" and not (abs(float(val) - float(lastval)) < 1):
@@ -38,6 +38,7 @@ for line in content[906:]:
             features.append(feature)
             lastXllCorner = xllcorner + (cellsize * idx)
             lastYllCorner = yllcorner + (cellsize * idy)
+            print(geometry["coordinates"])
         lastval = val
         idx += 1
     idy += 1
